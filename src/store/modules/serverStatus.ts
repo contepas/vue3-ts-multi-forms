@@ -1,24 +1,24 @@
-interface state {
+interface State {
     serverUp: boolean
 }
 
 export const namespaced = true
 
-export const state: state = {
+export const state: State = {
     serverUp: true,
 }
 
 export const mutations = {
-    SERVER_UP(state: state) {
-      state.serverUp = true
+    SERVER_UP(state: State) {
+        state.serverUp = true
     },
-    SERVER_DOWN(state: state) {
-      state.serverUp = false
-    }
+    SERVER_DOWN(state: State) {
+        state.serverUp = false
+    },
 }
 
 export const getters = {
-    isServerUp: (state: state) => {
+    isServerUp: (state: State) => {
         return state.serverUp
-    }
+    },
 }
