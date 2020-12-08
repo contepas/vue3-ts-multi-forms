@@ -1,26 +1,68 @@
 <template>
-    <div>
-        <span><slot></slot></span>
-        <!-- LOADING ANIMATION -->
-        <span v-if="isLoading" :class="$style.loading">
+    <div :class="containerStyle">
+        <span><slot>Button</slot></span>
+        <span v-if="isLoading" style="margin-left: 15px;">
             <loadingAnimation
                 width="16px"
                 height="16px"
-                :color="loadingColor"
+                color="white"
             />
         </span>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed, useCssModule } from 'vue'
+import loadingAnimation from './SvgLoading.vue'
 
 export default defineComponent({
-    setup() {
-        return {}
+    name: 'BaseButton',
+    components: { loadingAnimation },
+    props: {
+        isLoading: {
+            type: Boolean,
+            default: false,
+        },
+        isDisabled: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    setup(props) {
+        const containerStyle = computed(() => {
+            const { disabled, container } = useCssModule()
+            const { isDisabled, isLoading } = props
+            return [
+                container,
+                { [disabled]: isDisabled || isLoading}
+            ]
+        })
+        return {
+            containerStyle
+        }
     },
 })
 </script>
 
-<style scoped>
+<style lang="scss" module>
+@import '../style/global.scss';
+
+.container {
+    @include input-container;
+    background-color: $primary-color;
+    cursor: pointer;
+    color: white;
+    font-weight: 700;
+    border-color: $primary-color;
+    width: 150px;
+    display: flex;
+    justify-content: center;
+    &:active {
+        border-color: $secondary-color;
+    }
+}
+.disabled {
+    opacity: 0.6;
+    cursor: default;
+}
 </style>

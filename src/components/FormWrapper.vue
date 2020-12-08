@@ -2,17 +2,20 @@
     <h3 :class="$style.title">{{ title }}</h3>
     <div :class="$style.container">
         <div 
-            v-for="(value, index) in $slots"
+            v-for="(value, index) in dynamicSlots"
             :key="`${title}-${index}`"
             :class="$style.section"
         >
             <slot :name="index"></slot>
         </div>
+        <div :class="$style.buttons">
+            <slot name="buttons"></slot>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
     inheritAttrs: false,
@@ -22,6 +25,15 @@ export default defineComponent({
             required: true,
         },
     },
+    setup(props, { slots }) {
+        const dynamicSlots = computed(() => {
+            const { buttons, ...dynamicSlots} = slots
+            return dynamicSlots
+        })
+        return {
+            dynamicSlots
+        }
+    }
 })
 </script>
 
@@ -43,6 +55,10 @@ export default defineComponent({
 .section {
     background-color: lightgray;
     border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.buttons {
+    margin-left: auto;
 }
 </style>

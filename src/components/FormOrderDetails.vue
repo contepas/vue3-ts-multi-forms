@@ -1,6 +1,7 @@
 <template>
     <FormWrapper title="Order Details">
-        <BaseSelect v-model="value" :options="options"/>
+        <BaseSelect v-model="value" :options="options" label="Client"/>
+        <BaseSelect v-model="value" :options="options" label="Contact"/>
     </FormWrapper>
 </template>
 

@@ -1,17 +1,19 @@
 <template>
     <FormWrapper title="Sellers">
-		<BaseSelect v-model="value" :options="options"/>
+		<BaseSelect v-model="value" :options="options" label="Seller"/>
+		<BaseInput v-model="price" type="number" label="Price"/>
     </FormWrapper>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import FormWrapper from './FormWrapper.vue'
+import BaseInput from './BaseInput.vue'
 import BaseSelect from './BaseSelect.vue'
 
 export default defineComponent({
     name: 'FormSellers',
-    components: { FormWrapper, BaseSelect },
+    components: { FormWrapper, BaseInput, BaseSelect },
     props: {
         msg: String,
     },

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label :for="id">Choose a car:</label>
+        <label :for="id">{{ label }}</label>
         <select v-bind="$attrs" :value="modelValue" :id="id" @change="emitValue" class="select-css">
             <option 
                 v-for="option in options"
@@ -13,12 +13,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { uniqueId } from 'lodash'
 
 interface OptionSelect {
     name: string
-    slug: string
+    id: string
 }
 
 export default defineComponent({
@@ -33,11 +33,12 @@ export default defineComponent({
             type: [String, Number],
         },
         options: {
-            type: Array,
+            type: Array as PropType<OptionSelect[]>,
             required: true,
-            validator: (options: OptionSelect[]) => {
-                return true
-            },
+        },
+        label: {
+            type: String,
+            required: true,
         },
     },
     methods: {
