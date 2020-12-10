@@ -1,13 +1,13 @@
 import {ref, computed} from 'vue'
 
-export default function useAsyncData(asyncCall: () => Promise<any>) {
+export default function useAsyncData(asyncCall: (payload?: any) => Promise<any>) {
   // private
   const loading = ref(false)
 
   // public
-  async function getData () {
+  async function getData (payload?: any) {
     loading.value = true
-    await asyncCall()
+    await asyncCall(payload)
     loading.value = false
   }
   
