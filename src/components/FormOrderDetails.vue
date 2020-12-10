@@ -1,14 +1,20 @@
 <template>
     <FormWrapper title="Order Details" :loading="loading" @click="getClientsData()">
-        <BaseInput v-model="date" type="date" label="Order Date"/>
-        <BaseSelect v-model="client" :options="clients" :disabled="loading" label="Client"/>
-        <BaseSelect v-model="contact" :options="options" :disabled="loading" label="Contact"/>
+        <template v-slot:orderDetails>
+            <BaseInput v-model="date" type="date" label="Order Date"/>
+            <BaseSelect v-model="client" :options="clients" :disabled="loading" label="Client"/>
+            <BaseSelect v-model="contact" :options="options" :disabled="loading" label="Contact"/>
+        </template>
+        <template v-slot:buttons>
+            <BaseButton style="margin-left: auto;" @click="saveData"/>
+        </template>
     </FormWrapper>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import FormWrapper from './FormWrapper.vue'
+import BaseButton from './BaseButton.vue'
 import BaseInput from './BaseInput.vue'
 import BaseSelect from './BaseSelect.vue'
 import useAsyncData from '../compositionFunctions/useAsyncData'
@@ -30,6 +36,7 @@ export default defineComponent({
     name: 'FormOrderDetails',
     components: {
         FormWrapper,
+        BaseButton,
         BaseInput,
         BaseSelect,
     },
@@ -40,6 +47,9 @@ export default defineComponent({
         const date = ref()
         const client = ref()
         const contact = ref()
+        const saveData = () => {
+            console.log('saveData')
+        }
         return {
             date,
             loading,

@@ -55,6 +55,7 @@ export default defineComponent({
     font-weight: 700;
     border-color: $primary-color;
     width: 150px;
+    height: 40px;
     display: flex;
     justify-content: center;
     &:active {

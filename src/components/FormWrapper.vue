@@ -5,12 +5,17 @@
         <div 
             v-for="(value, index) in dynamicSlots"
             :key="`${title}-${index}`"
-            :class="$style.section"
+            :class="[$style.section]"
         >
-            <slot :name="index"></slot>
+            <div  :class="[$style.items]">
+                <slot :name="index"></slot>
+            </div>
+            <div :class="$style.buttons">
+                <slot name="buttons"></slot>
+            </div>
         </div>
-        <div :class="$style.buttons">
-            <slot name="buttons"></slot>
+        <div :class="[$style.buttons, $style.center]">
+            <slot name="extra"></slot>
         </div>
     </div>
 </template>
@@ -35,7 +40,7 @@ export default defineComponent({
     },
     setup(props, { slots }) {
         const dynamicSlots = computed(() => {
-            const { buttons, ...dynamicSlots} = slots
+            const { buttons, extra, ...dynamicSlots} = slots
             return dynamicSlots
         })
         return {
@@ -47,6 +52,37 @@ export default defineComponent({
 
 <style lang="scss" module>
 @import '../style/global.scss';
+
+@mixin container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.items {
+    @include container;
+    flex-direction: column;
+    > div {
+        margin-bottom: 20px;
+    }
+    @media (min-width: 600px) {
+        flex-direction: row;
+        > div {
+            margin-right: 20px;
+        }
+    }
+}
+.buttons {
+    @include container;
+    justify-content: flex-end;
+    align-items: flex-end;
+    > div {
+        margin-left: 20px;
+    }
+}
+.center {
+    justify-content: center;
+    margin-top: 20px;
+}
 
 .title {
     padding-left: 10px;
@@ -65,8 +101,7 @@ export default defineComponent({
     border-radius: 10px;
     padding: 20px;
     margin-top: 28px;
-}
-.buttons {
-    margin-left: auto;
+    display: flex;
+    flex-wrap: wrap;
 }
 </style>
