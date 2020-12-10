@@ -1,13 +1,13 @@
 export interface request {
     type: 'GET' | 'POST' | 'PUT' | 'DELETE'
     data?: requrestOrder | requestSeller[] | requestOrderItem | deleteItem
-    moke_response?: nameId[]
+    mokeResponse?: nameId[]
     id?: number
 }
 
 export interface getRequest extends request {
     type: 'GET'
-    moke_response: nameId[]
+    mokeResponse: nameId[]
 }
 
 export interface postPutRequest extends request {
@@ -21,32 +21,32 @@ export interface deleteRequest extends request {
 }
 
 export interface requrestOrder {
-    order_id?: number
-    order_date: string
+    orderId?: number
+    orderDate: string
     client: number
     contact: number
 }
 
 export interface requestSeller {
-    order_id: number
+    orderId: number
     seller: number
     percentage: number
 }
 
 export interface requestOrderItem {
-    item_id?: number
-    order_id: number
+    itemId?: number
+    orderId: number
     type: 'generic' | 'special'
     product: number
     price: number
     amount: number
-    delivery_type?: string
+    deliveryType?: string
     comment?: string
 }
 
 export interface deleteItem {
-    order_id: number
-    item_id: number
+    orderId: number
+    itemId: number
 }
 
 export interface response {

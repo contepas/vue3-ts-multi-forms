@@ -14,38 +14,38 @@ import {
 } from './restApis.validations'
 
 const validationMessages = {
-    order_id: 'order id not valid',
-    client_id: 'client id not valid',
-    contact_id: 'contact id not valid',
-    item_id: 'item id not valid',
-    order_date: 'order date not valid',
-    delivery_type: 'delivery type is empty',
+    orderId: 'order id not valid',
+    clientId: 'client id not valid',
+    contactId: 'contact id not valid',
+    itemId: 'item id not valid',
+    orderDate: 'order date not valid',
+    deliveryType: 'delivery type is empty',
     comment: 'comment is empty',
 }
 
 // GET /client
-export const getClients = (): Promise<response> => {
+export const getClientsCall = (): Promise<response> => {
     const type = 'GET'
-    const moke_response = [
+    const mokeResponse = [
         { id: 1, name: 'Client A' },
         { id: 2, name: 'Client B' },
     ]
-    return fakeApiCall({ type, moke_response })
+    return fakeApiCall({ type, mokeResponse })
 }
 
-// GET /client/{client_id}/contact
-export const getClientContacts = (client_id: number): Promise<response> => {
+// GET /client/{clientId}/contact
+export const getClientContactsCall = (clientId: number): Promise<response> => {
     const type = 'GET'
-    let moke_response: nameId[] = []
-    switch (client_id) {
+    let mokeResponse: nameId[] = []
+    switch (clientId) {
         case 1:
-            moke_response = [
+            mokeResponse = [
                 { id: 1, name: 'Contact A1' },
                 { id: 2, name: 'Contact A2' },
             ]
             break
         case 2:
-            moke_response = [
+            mokeResponse = [
                 { id: 1, name: 'Contact B1' },
                 { id: 2, name: 'Contact B2' },
             ]
@@ -53,117 +53,117 @@ export const getClientContacts = (client_id: number): Promise<response> => {
         default:
             throw 'client id is not valid'
     }
-    return fakeApiCall({ type, moke_response })
+    return fakeApiCall({ type, mokeResponse })
 }
 
 // GET /seller
-export const getSellers = (): Promise<response> => {
+export const getSellersCall = (): Promise<response> => {
     const type = 'GET'
-    const moke_response = [
+    const mokeResponse = [
         { id: 1, name: 'Seller A' },
         { id: 2, name: 'Seller B' },
         { id: 3, name: 'Seller C' },
     ]
-    return fakeApiCall({ type, moke_response })
+    return fakeApiCall({ type, mokeResponse })
 }
 
 // GET /product
-export const getProducts = (): Promise<response> => {
+export const getProductsCall = (): Promise<response> => {
     const type = 'GET'
-    const moke_response = [
+    const mokeResponse = [
         { id: 1, name: 'Product A' },
         { id: 2, name: 'Product B' },
         { id: 3, name: 'Product C' },
     ]
-    return fakeApiCall({ type, moke_response })
+    return fakeApiCall({ type, mokeResponse })
 }
 
 // GET /delivery-type
-export const getDeliveryTypes = (): Promise<response> => {
+export const getDeliveryTypesCall = (): Promise<response> => {
     const type = 'GET'
-    const moke_response = [
+    const mokeResponse = [
         { id: 1, name: 'Delivery A' },
         { id: 2, name: 'Delivery B' },
         { id: 3, name: 'Delivery C' },
         { id: 3, name: 'Delivery C' },
     ]
-    return fakeApiCall({ type, moke_response })
+    return fakeApiCall({ type, mokeResponse })
 }
 
 const validateOrder = (data: requrestOrder): void => {
-    const { order_date, client, contact } = data
-    checkDate(order_date, validationMessages.order_date)
-    checkId(client, validationMessages.client_id)
-    checkId(contact, validationMessages.contact_id)
+    const { orderDate, client, contact } = data
+    checkDate(orderDate, validationMessages.orderDate)
+    checkId(client, validationMessages.clientId)
+    checkId(contact, validationMessages.contactId)
 }
 
 // POST /order
-export const postOrder = (data: requrestOrder): Promise<response> => {
+export const postOrderCall = (data: requrestOrder): Promise<response> => {
     const type = 'POST'
     validateOrder(data)
     return fakeApiCall({ type, data })
 }
 
-// PUT /order/{order_id}
-export const putOrder = (data: requrestOrder): Promise<response> => {
+// PUT /order/{orderId}
+export const putOrderCall = (data: requrestOrder): Promise<response> => {
     const type = 'PUT'
-    const order_id = data?.order_id || 0
-    checkId(order_id, validationMessages.order_id)
+    const orderId = data?.orderId || 0
+    checkId(orderId, validationMessages.orderId)
     validateOrder(data)
-    return fakeApiCall({ type, data, id: order_id })
+    return fakeApiCall({ type, data, id: orderId })
 }
 
-// PUT /order/{order_id}/finalize
-export const finalizeOrder = (order_id: number): Promise<response> => {
+// PUT /order/{orderId}/finalize
+export const finalizeOrderCall = (orderId: number): Promise<response> => {
     const type = 'PUT'
-    checkId(order_id, validationMessages.order_id)
-    return fakeApiCall({ type, data: undefined, id: order_id })
+    checkId(orderId, validationMessages.orderId)
+    return fakeApiCall({ type, data: undefined, id: orderId })
 }
 
-// PUT /order/{order_id}/seller
-export const putOrderSeller = (
+// PUT /order/{orderId}/seller
+export const putOrderSellerCall = (
     sellers: requestSeller[],
-    order_id: number,
+    orderId: number,
 ): Promise<response> => {
     const type = 'PUT'
     checkLength(sellers)
-    checkId(order_id, validationMessages.order_id)
-    return fakeApiCall({ type, data: sellers, id: order_id })
+    checkId(orderId, validationMessages.orderId)
+    return fakeApiCall({ type, data: sellers, id: orderId })
 }
 
 const validateItem = (item: requestOrderItem): void => {
-    const { type: order_type, delivery_type, comment, order_id } = item
-    if (order_type === 'special') {
-        checkIfEmptyString(delivery_type, validationMessages.delivery_type)
+    const { type: orderType, deliveryType, comment, orderId } = item
+    if (orderType === 'special') {
+        checkIfEmptyString(deliveryType, validationMessages.deliveryType)
         checkIfEmptyString(comment, validationMessages.comment)
     }
-    checkId(order_id, validationMessages.order_id)
+    checkId(orderId, validationMessages.orderId)
 }
 
-// POST /order/{order_id}/item
-export const postOrderItem = (item: requestOrderItem): Promise<response> => {
+// POST /order/{orderId}/item
+export const postOrderItemCall = (item: requestOrderItem): Promise<response> => {
     const type = 'POST'
     validateItem(item)
     return fakeApiCall({ type, data: item })
 }
 
-// PUT /order/{order_id}/item/{item_id}
-export const putOrderItem = (item: requestOrderItem): Promise<response> => {
+// PUT /order/{orderId}/item/{itemId}
+export const putOrderItemCall = (item: requestOrderItem): Promise<response> => {
     const type = 'PUT'
-    const { order_id, item_id } = item
-    checkId(order_id, validationMessages.order_id)
-    checkId(item_id, validationMessages.item_id)
+    const { orderId, itemId } = item
+    checkId(orderId, validationMessages.orderId)
+    checkId(itemId, validationMessages.itemId)
     validateItem(item)
-    return fakeApiCall({ type, data: item, id: item_id })
+    return fakeApiCall({ type, data: item, id: itemId })
 }
 
-// DELETE /order/{order_id}/item/{item_id}
-export const deleteItem = (
-    order_id: number,
-    item_id: number,
+// DELETE /order/{orderId}/item/{itemId}
+export const deleteItemCall = (
+    orderId: number,
+    itemId: number,
 ): Promise<response> => {
     const type = 'DELETE'
-    checkId(order_id)
-    const data = { item_id, order_id }
-    return fakeApiCall({ type, data, id: item_id })
+    checkId(orderId)
+    const data = { itemId, orderId }
+    return fakeApiCall({ type, data, id: itemId })
 }

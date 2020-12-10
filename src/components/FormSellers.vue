@@ -18,6 +18,7 @@ export default defineComponent({
         msg: String,
     },
     setup() {
+        const price = ref(0)
         const options = [
             {
                 name: 'Test 1',
@@ -33,6 +34,7 @@ export default defineComponent({
         return {
             options,
             value,
+            price
         }
     },
 })

@@ -1,6 +1,7 @@
 <template>
     <h3 :class="$style.title">{{ title }}</h3>
     <div :class="$style.container">
+        <SvgRefresh style="float: right" :spin="loading" @click="$emit('click')"/>
         <div 
             v-for="(value, index) in dynamicSlots"
             :key="`${title}-${index}`"
@@ -16,13 +17,20 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue'
+import SvgRefresh from './icons/SvgRefresh.vue'
 
 export default defineComponent({
+    name: 'FormWrapper',
+    components: { SvgRefresh },
     inheritAttrs: false,
     props: {
         title: {
             type: String,
             required: true,
+        },
+        loading: {
+            type: Boolean,
+            default: false,
         },
     },
     setup(props, { slots }) {
@@ -56,7 +64,7 @@ export default defineComponent({
     background-color: lightgray;
     border-radius: 10px;
     padding: 20px;
-    margin-bottom: 20px;
+    margin-top: 28px;
 }
 .buttons {
     margin-left: auto;

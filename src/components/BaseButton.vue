@@ -2,7 +2,7 @@
     <div :class="containerStyle">
         <span><slot>Button</slot></span>
         <span v-if="isLoading" style="margin-left: 15px;">
-            <loadingAnimation
+            <SvgLoading
                 width="16px"
                 height="16px"
                 color="white"
@@ -13,11 +13,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, useCssModule } from 'vue'
-import loadingAnimation from './SvgLoading.vue'
+import SvgLoading from './icons/SvgLoading.vue'
 
 export default defineComponent({
     name: 'BaseButton',
-    components: { loadingAnimation },
+    components: { SvgLoading },
     props: {
         isLoading: {
             type: Boolean,

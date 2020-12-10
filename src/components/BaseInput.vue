@@ -18,7 +18,7 @@ export default defineComponent({
             default: uniqueId('input_'),
         },
         modelValue: {
-            type: String,
+            type: [String, Number],
             default: '',
         },
         label: {
@@ -29,7 +29,7 @@ export default defineComponent({
             type: String,
             default: 'text',
             validator: (type: string): boolean =>
-                ['text', 'number'].includes(type),
+                ['text', 'number', 'date'].includes(type),
         },
         errorMessage: {
             type: String,

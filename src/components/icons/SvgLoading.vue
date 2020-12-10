@@ -5,6 +5,7 @@
         height="64px"
         viewBox="0 0 128 128"
         xml:space="preserve"
+        class="icon"
     >
         <g>
             <path

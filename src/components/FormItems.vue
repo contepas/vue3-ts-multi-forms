@@ -1,13 +1,13 @@
 <template>
     <FormWrapper title="Items">
-        <template v-for="item in items" :key="item.Id" v-slot:[item.name]>
+        <template v-for="item in items" :key="`${item.name}_${item.Id}`" v-slot:[item.name]>
             <div :class="$style.items">
-                <BaseSelect label="Product"/>
+                <BaseSelect label="Product" :options="items"/>
                 <BaseInput v-model="price" type="number" label="Price"/>
                 <BaseInput v-model="price" type="number" label="Amount"/>
                 <template v-if="item.type === 'special'">
-                    <BaseSelect label="Delivery"/>
-                    <BaseInput  v-model="comment" label="Comment"/>
+                    <BaseSelect label="Delivery" :options="items"/>
+                    <BaseInput v-model="comment" label="Comment"/>
                 </template>
             </div>
             <div :class="[$style.buttons]">
@@ -52,7 +52,8 @@ export default defineComponent({
         return {
             price,
             comment,
-            items
+            items,
+            options: items
         }
     },
 })
