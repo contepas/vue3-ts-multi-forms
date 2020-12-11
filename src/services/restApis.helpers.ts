@@ -15,7 +15,7 @@ export const fakeApiCall = async (
     request: getRequest | postPutRequest | deleteRequest,
 ): Promise<response> => {
     await sleep(1000)
-    const { isServerUp } = store.getters['serverStatus/isServerUp']
+    const isServerUp = store.getters['serverStatus/isServerUp']
     const { type, id, mokeResponse } = request
     if (type === 'GET') {
         return {
