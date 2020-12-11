@@ -5,17 +5,27 @@
         @click="getClientsData()"
     >
         <template v-slot:orderDetails>
-            <BaseInput v-model="date" :disabled="disableDate" type="date" label="Order Date" />
+            <BaseInput 
+                v-model="date" 
+                :disabled="disableDate"
+                :show-error="showErrors"
+                :error-message="errorMessages.date"
+                type="date" 
+                label="Order Date" />
             <BaseSelect
                 v-model="client"
                 :options="clients"
                 :disabled="disabledClients"
+                :show-error="showErrors"
+                :error-message="errorMessages.client"
                 label="Client"
             />
             <BaseSelect
                 v-model="contact"
                 :options="contacts"
                 :disabled="disabledContacts"
+                :show-error="showErrors"
+                :error-message="errorMessages.contact"
                 label="Contact"
             />
         </template>
@@ -41,12 +51,16 @@ import {
 
 const getClientsDataObject = (store: Store<any>) => {
     const getClients = () => store.dispatch('formOrderDetails/getClients')
-    const { loading: loadingClients, getData: getClientsData } = useAsyncData(
-        getClients,
-    )
+    const { 
+        loading: loadingClients, 
+        getData: getClientsData 
+    } = useAsyncData(getClients)
+    const clientsGetter = () => store.getters['formOrderDetails/clients']
+    const clients = computed(clientsGetter)
     return {
         loadingClients,
         getClientsData,
+        clients
     }
 }
 
@@ -57,9 +71,17 @@ const getClientContactsDataObject = (store: Store<any>) => {
         loading: loadingClientContacts,
         getData: getClientContactsData,
     } = useAsyncData(getClientContacts)
+    const contactsGetter = () =>
+        store.getters['formOrderDetails/clientContacts'](client.value?.id)
+    const contacts = computed(contactsGetter)
+    const clientWatcher = () =>
+        getClientContactsData(Number(client.value?.id))
+    const watchClient = () => watch(client, clientWatcher)
+    watchClient()
     return {
         loadingClientContacts,
         getClientContactsData,
+        contacts
     }
 }
 
@@ -74,33 +96,39 @@ export default defineComponent({
     setup() {
         const store = useStore()
 
+        // VALIDATORS
+        const showErrors = ref(false)
+        const errorMessages = computed(() => store.getters['formOrderDetails/errorMessages'])
+
         // GET CLIENTS DATA
-        const { loadingClients, getClientsData } = getClientsDataObject(store)
+        const {
+            loadingClients,
+            getClientsData,
+            clients
+        } = getClientsDataObject(store)
         getClientsData()
-        const clientsGetter = () => store.getters['formOrderDetails/clients']
-        const clients = computed(clientsGetter)
 
         // GET CONTACTS DATA
         const {
             loadingClientContacts,
             getClientContactsData,
+            contacts
         } = getClientContactsDataObject(store)
-        const contactsGetter = () =>
-            store.getters['formOrderDetails/clientContacts'](client.value?.id)
-        const contacts = computed(contactsGetter)
-        const clientWatcher = () =>
-            getClientContactsData(Number(client.value?.id))
-        watch(client, clientWatcher)
 
         // SAVE DATA
+        const isDataValid = computed(() => store.getters['formOrderDetails/isDataValid'])
         const isDataSavedGetter = () =>
             store.getters['formOrderDetails/isDataSaved']
         const isDataSaved = computed(isDataSavedGetter)
         const {loading: savingData, getData: saveData} = useAsyncData(() => store.dispatch('formOrderDetails/saveOrderDetails'))
         const buttonClick = () => {
-            isDataSaved.value
-                ? store.commit('formOrderDetails/SET_SAVED', false) 
-                : saveData()
+            if (isDataSaved.value) {
+                store.commit('formOrderDetails/SET_SAVED', false) 
+            } else if (isDataValid.value) {
+                saveData()
+            } else {
+                showErrors.value = true
+            }
         }
         
         // UI MODIFICATORS
@@ -129,6 +157,8 @@ export default defineComponent({
             getClientsData,
             buttonClick,
             savingData,
+            showErrors,
+            errorMessages,
         }
     },
 })

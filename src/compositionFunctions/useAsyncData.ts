@@ -1,5 +1,9 @@
 import {ref, computed} from 'vue'
 
+/**
+ * asyncronous calls wrapper.
+ * It gives back an object with the callback to get the data and the reactive loading state.
+ */
 export default function useAsyncData(asyncCall: (payload?: any) => Promise<any>) {
   // private
   const loading = ref(false)
@@ -12,7 +16,7 @@ export default function useAsyncData(asyncCall: (payload?: any) => Promise<any>)
   }
   
   return {
-    // call computed to make loading and response private
+    // call computed to make loading private
     loading: computed(() => loading.value),
     getData
   }

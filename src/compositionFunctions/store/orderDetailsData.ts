@@ -7,11 +7,15 @@ export const date = computed({
 })
 export const client = computed({
     get: () => store.getters['formOrderDetails/client'],
-    set: client => store.commit('formOrderDetails/SET_CLIENT', client)
+    set: client => {
+        store.commit('formOrderDetails/SET_CLIENT', client)
+        store.commit('formOrderDetails/SET_CONTACT', null)
+    }
 })
 export const contact = computed({
     get: () => store.getters['formOrderDetails/contact'],
     set: contact => store.commit('formOrderDetails/SET_CONTACT', contact)
 })
-
+// =======================================================================
 // In this way is easier to reuse the same binding in different components
+// =======================================================================

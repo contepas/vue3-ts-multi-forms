@@ -1,9 +1,14 @@
 <template>
-  <div class="input-item">
-    <label v-if="label" :for="id">{{ label }}</label>
-    <input v-bind="attrs" @input="emitValue" :value="modelValue" />
-	<p v-show="errorMessage">{{errorMessage}}</p>
-  </div>
+    <div class="input-item">
+        <label v-if="label" :for="id">{{ label }}</label>
+        <input v-bind="attrs" @input="emitValue" :value="modelValue" />
+        <p
+            style="color: red; margin: 5px 0 0 8px;"
+            v-show="showError && errorMessage"
+        >
+            {{ errorMessage }}
+        </p>
+    </div>
 </template>
 
 <script lang="ts">
@@ -30,6 +35,10 @@ export default defineComponent({
             default: 'text',
             validator: (type: string): boolean =>
                 ['text', 'number', 'date'].includes(type),
+        },
+        showError: {
+            type: Boolean,
+            default: false,
         },
         errorMessage: {
             type: String,

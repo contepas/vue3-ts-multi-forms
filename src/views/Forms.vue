@@ -13,7 +13,7 @@ import FormSellers from '../components/FormSellers.vue'
 import FormItems from '../components/FormItems.vue'
 
 export default defineComponent({
-    name: 'Assignment',
+    name: 'Forms',
     components: {
         FormOrderDetails,
         FormSellers,

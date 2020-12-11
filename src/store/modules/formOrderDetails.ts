@@ -5,6 +5,8 @@ import {
     putOrderCall,
 } from '../../services/restApis'
 
+import { isEmpty } from 'lodash'
+
 interface Client {
     id: number
     name: string
@@ -122,11 +124,20 @@ export const getters = {
     clientsContactFetchedIds: (state: State) => {
         return Object.keys(state.clientsContacts)
     },
-    client: (state: State) => state.client,
-    validClient: (state: State) => state.client !== null,
-    contact: (state: State) => state.contact,
-    validContact: (state: State) => state.contact !== null,
     date: (state: State) => state.date,
+    client: (state: State) => state.client,
+    contact: (state: State) => state.contact,
+
+    validClient: (state: State) => !isEmpty(state.client),
+    validContact: (state: State) => !isEmpty(state.contact),
     validDate: (state: State) => !!state.date,
+
+    isDataValid: (state: State, getters: any) => getters.validClient && getters.validContact && getters.validDate,
+
     isDataSaved: (state: State) => state.saved,
+    errorMessages: (state: State, getters: any) => ({
+        client: getters.validClient ? '' : 'Client is not valid',
+        contact: getters.validContact ? '' : 'Contact is not valid',
+        date: getters.validDate ? '' : 'Date is not valid',
+    })
 }

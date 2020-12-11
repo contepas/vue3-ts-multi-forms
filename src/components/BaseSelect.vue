@@ -1,15 +1,28 @@
 <template>
     <div>
         <label :for="id">{{ label }}</label>
-        <select v-bind="$attrs" :value="modelValue?.name" :id="id" @change="emitValue" class="select-css">
-            <option 
+        <select
+            v-bind="$attrs"
+            :value="modelValue?.name"
+            :id="id"
+            @change="emitValue"
+            class="select-css"
+        >
+            <option
                 v-for="option in options"
                 :value="option.name"
                 :key="`${id}-${option.id}`"
                 :data-id="option.id"
                 :selected="option.name === modelValue"
-            >{{ option.name }}</option>
+                >{{ option.name }}</option
+            >
         </select>
+        <p
+            style="color: red; margin: 5px 0 0 8px;"
+            v-show="showError && errorMessage"
+        >
+            {{ errorMessage }}
+        </p>
     </div>
 </template>
 
@@ -41,6 +54,14 @@ export default defineComponent({
             type: String,
             required: true,
         },
+        showError: {
+            type: Boolean,
+            defalut: false,
+        },
+        errorMessage: {
+            type: String,
+            default: '',
+        },
     },
     methods: {
         emitValue(event: any) {
@@ -48,7 +69,7 @@ export default defineComponent({
             const { options } = event.target
             const selected = options[event.target.selectedIndex]
             const { id } = selected.dataset
-            this.$emit('update:modelValue', {name, id})
+            this.$emit('update:modelValue', { name, id })
         },
     },
 })

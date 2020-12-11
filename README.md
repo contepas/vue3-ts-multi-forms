@@ -1,29 +1,37 @@
-# stx-forms
+# Vue3 and Typescript Multi Forms
 
-## Project setup
-```
-yarn install
-```
+## Technologies
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+* Vue 3 (composition API - options API)
+* Typescript
+* Vuex
+* Vue Router
+* Lodash
+* Scss
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## Notes
 
-### Run your unit tests
-```
-yarn test:unit
-```
+The application in wrote in Vue 3. The coposition API is used as well the options API.
+Typescript is used in most of the components and only to add a static types.
+The vuex store is not fully wrote in Typescript.
 
-### Lints and fixes files
-```
-yarn lint
-```
+## Code structure
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+The form releated data (actions, mutations, getter, validations) are managed in the store, 
+a separated store for every form, this makes easier to check the validation of the form data outside of the component,
+giving to the developers the possibility to trigger form actions or react at data changes outside of the component scope
+(example: will be easier to trigger an action that will check the data of all the forms and submit them all togheter).
+
+There are two different store implamantation, one is in vuex and another one in wrote with the Reactivity APIs of vue 3.
+
+
+
+
+## Mocke rest API calls
+
+All the rest API calls are mocked in the restApi service in src/services.
+This service has is own validation rules.
+
+
+### Demo
+Check the demo [here](https://cli.vuejs.org/config/).
