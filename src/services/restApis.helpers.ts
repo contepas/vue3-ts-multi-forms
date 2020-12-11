@@ -1,4 +1,4 @@
-import store from '../store'
+import { getIsServerUp } from '../compositionFunctions/store/serverStatus'
 import {
     deleteRequest,
     getRequest,
@@ -15,7 +15,6 @@ export const fakeApiCall = async (
     request: getRequest | postPutRequest | deleteRequest,
 ): Promise<response> => {
     await sleep(1000)
-    const isServerUp = store.getters['serverStatus/isServerUp']
     const { type, id, mokeResponse } = request
     if (type === 'GET') {
         return {
@@ -23,7 +22,7 @@ export const fakeApiCall = async (
             data: mokeResponse,
         }
     }
-    if (isServerUp) {
+    if (getIsServerUp.value) {
         return {
             success: true,
             id: !!id && id > 0 ? id : 1000,

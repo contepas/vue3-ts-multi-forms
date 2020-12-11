@@ -33,7 +33,7 @@ interface State {
 
 export const namespaced = true
 
-export const state: State = {
+const initialState = () => ({
     clients: [],
     clientsContacts: {},
     client: null,
@@ -41,7 +41,9 @@ export const state: State = {
     date: '',
     saved: false,
     orderId: null,
-}
+})
+
+export const state: State = initialState()
 
 export const mutations = {
     ADD_CLIENTS(state: State, clients: Client[]) {
@@ -68,6 +70,16 @@ export const mutations = {
     SET_ORDER_ID(state: State, orderId: number) {
         state.orderId = orderId
     },
+    RESET_CONTACT(state: State) {
+        state.contact = null
+    },
+    RESET_CLIENT_CONTACT(state: State) {
+        state.client = null
+        state.contact = null
+    },
+    RESET(state: State) {
+        state = initialState()
+    }
 }
 
 export const actions = {
@@ -75,6 +87,7 @@ export const actions = {
         const { success, data: clients } = await getClientsCall()
         if (success === true) {
             commit('ADD_CLIENTS', clients)
+            commit('RESET_CLIENT_CONTACT')
         }
     },
     async getClientContacts({ commit, getters }: any, clientId: number) {
@@ -85,6 +98,7 @@ export const actions = {
             } = await getClientContactsCall(clientId)
             if (success) {
                 commit('ADD_CLIENT_CONTACTS', { clientContacts, clientId })
+                commit('RESET_CONTACT')
             }
         }
     },

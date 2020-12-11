@@ -5,13 +5,14 @@
         @click="getClientsData()"
     >
         <template v-slot:orderDetails>
-            <BaseInput 
-                v-model="date" 
+            <BaseInput
+                v-model="date"
                 :disabled="disableDate"
                 :show-error="showErrors"
                 :error-message="errorMessages.date"
-                type="date" 
-                label="Order Date" />
+                type="date"
+                label="Order Date"
+            />
             <BaseSelect
                 v-model="client"
                 :options="clients"
@@ -30,13 +31,18 @@
             />
         </template>
         <template v-slot:buttons>
-            <BaseButton @click="buttonClick()" :is-disabled="loading" :is-loading="savingData">{{ buttonName }}</BaseButton>
+            <BaseButton
+                @click="buttonClick()"
+                :is-disabled="loading"
+                :is-loading="savingData"
+                >{{ buttonName }}</BaseButton
+            >
         </template>
     </FormWrapper>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from 'vue'
+import { defineComponent, ref, computed, watch, Ref } from 'vue'
 import { useStore, Store } from 'vuex'
 import FormWrapper from './FormWrapper.vue'
 import BaseButton from './BaseButton.vue'
@@ -51,16 +57,14 @@ import {
 
 const getClientsDataObject = (store: Store<any>) => {
     const getClients = () => store.dispatch('formOrderDetails/getClients')
-    const { 
-        loading: loadingClients, 
-        getData: getClientsData 
-    } = useAsyncData(getClients)
-    const clientsGetter = () => store.getters['formOrderDetails/clients']
-    const clients = computed(clientsGetter)
+    const { loading: loadingClients, getData: getClientsData } = useAsyncData(
+        getClients,
+    )
+    const clients = computed(() => store.getters['formOrderDetails/clients'])
     return {
         loadingClients,
         getClientsData,
-        clients
+        clients,
     }
 }
 
@@ -71,17 +75,47 @@ const getClientContactsDataObject = (store: Store<any>) => {
         loading: loadingClientContacts,
         getData: getClientContactsData,
     } = useAsyncData(getClientContacts)
-    const contactsGetter = () =>
-        store.getters['formOrderDetails/clientContacts'](client.value?.id)
-    const contacts = computed(contactsGetter)
-    const clientWatcher = () =>
-        getClientContactsData(Number(client.value?.id))
-    const watchClient = () => watch(client, clientWatcher)
+    const contacts = computed(() =>
+        store.getters['formOrderDetails/clientContacts'](client.value?.id),
+    )
+    const watchClient = () =>
+        watch(client, (newVal) =>
+            newVal?.id
+                ? getClientContactsData(Number(newVal?.id))
+                : null,
+        )
     watchClient()
     return {
         loadingClientContacts,
         getClientContactsData,
-        contacts
+        contacts,
+    }
+}
+
+const getSaveDataObject = (store: Store<any>, showErrors: Ref<boolean>) => {
+    const isDataValid = computed(
+        () => store.getters['formOrderDetails/isDataValid'],
+    )
+    const isDataSavedGetter = () =>
+        store.getters['formOrderDetails/isDataSaved']
+    const isDataSaved = computed(isDataSavedGetter)
+    const { loading: savingData, getData: saveData } = useAsyncData(() =>
+        store.dispatch('formOrderDetails/saveOrderDetails'),
+    )
+    const buttonClick = () => {
+        if (isDataSaved.value) {
+            store.commit('formOrderDetails/SET_SAVED', false)
+        } else if (isDataValid.value) {
+            saveData()
+        } else {
+            showErrors.value = true
+        }
+    }
+    return {
+        isDataValid,
+        isDataSaved,
+        savingData,
+        buttonClick,
     }
 }
 
@@ -98,13 +132,15 @@ export default defineComponent({
 
         // VALIDATORS
         const showErrors = ref(false)
-        const errorMessages = computed(() => store.getters['formOrderDetails/errorMessages'])
+        const errorMessages = computed(
+            () => store.getters['formOrderDetails/errorMessages'],
+        )
 
         // GET CLIENTS DATA
         const {
             loadingClients,
             getClientsData,
-            clients
+            clients,
         } = getClientsDataObject(store)
         getClientsData()
 
@@ -112,43 +148,39 @@ export default defineComponent({
         const {
             loadingClientContacts,
             getClientContactsData,
-            contacts
+            contacts,
         } = getClientContactsDataObject(store)
 
         // SAVE DATA
-        const isDataValid = computed(() => store.getters['formOrderDetails/isDataValid'])
-        const isDataSavedGetter = () =>
-            store.getters['formOrderDetails/isDataSaved']
-        const isDataSaved = computed(isDataSavedGetter)
-        const {loading: savingData, getData: saveData} = useAsyncData(() => store.dispatch('formOrderDetails/saveOrderDetails'))
-        const buttonClick = () => {
-            if (isDataSaved.value) {
-                store.commit('formOrderDetails/SET_SAVED', false) 
-            } else if (isDataValid.value) {
-                saveData()
-            } else {
-                showErrors.value = true
-            }
-        }
-        
+        const {
+            isDataValid,
+            isDataSaved,
+            savingData,
+            buttonClick,
+        } = getSaveDataObject(store, showErrors)
+
         // UI MODIFICATORS
-        const buttonName = computed(() => isDataSaved.value ? 'Modify' : 'Save')
+        const buttonName = computed(() =>
+            isDataSaved.value ? 'Modify' : 'Save',
+        )
         const loading = computed(
             () => loadingClients.value || loadingClientContacts.value,
         )
-        const disableInputs = computed(() => isDataSaved.value || savingData.value)
+        const disableInputs = computed(
+            () => isDataSaved.value || savingData.value,
+        )
         const disableDate = computed(() => disableInputs.value)
         const disabledContacts = computed(
-            () => loading.value || contacts.value.length < 1 || disableInputs.value,
+            () =>
+                loading.value ||
+                contacts.value.length < 1 ||
+                disableInputs.value,
         )
-        const disabledClients = computed(() => loading.value || disableInputs.value)
+        const disabledClients = computed(
+            () => loading.value || disableInputs.value,
+        )
 
         return {
-            loading,
-            disableDate,
-            disabledClients,
-            disabledContacts,
-            buttonName,
             date,
             client,
             clients,
@@ -156,9 +188,14 @@ export default defineComponent({
             contacts,
             getClientsData,
             buttonClick,
-            savingData,
             showErrors,
             errorMessages,
+            loading,
+            savingData,
+            disableDate,
+            disabledClients,
+            disabledContacts,
+            buttonName,
         }
     },
 })
