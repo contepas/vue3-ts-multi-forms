@@ -41,7 +41,7 @@ export default defineComponent({
     props: {
         id: {
             type: String,
-            default: uniqueId('select_'),
+            default: () => uniqueId('select_'),
         },
         modelValue: {
             type: Object as PropType<OptionSelect>,

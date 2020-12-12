@@ -6,8 +6,6 @@ $primary-color: #42b983;
 $secondary-color: #2c3e50;
 $border-color: #aaa;
 
-
-
 //==========
 // MIXINS
 //==========
@@ -15,8 +13,8 @@ $border-color: #aaa;
 @mixin input-container {
     display: block;
     border: 1px solid $border-color;
-    border-radius: .5em;
-    padding: .6em 1.4em .5em .8em;
+    border-radius: 0.5em;
+    padding: 0.6em 1.4em 0.5em 0.8em;
     line-height: 1.3;
     font-size: 16px;
     width: 100%;
@@ -40,7 +38,7 @@ $border-color: #aaa;
     &[aria-disabled='true'] {
         color: graytext;
     }
-    @media (min-width: 600px) {
+    @media (min-width: 500px) {
         width: 220px;
     }
 }

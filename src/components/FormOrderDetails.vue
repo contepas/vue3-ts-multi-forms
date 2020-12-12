@@ -1,50 +1,55 @@
 <template>
-    <FormWrapper
+    <WrapperForm
         title="Order Details"
         :loading="loading"
         @click="getClientsData()"
     >
-        <template v-slot:orderDetails>
-            <BaseInput
-                v-model="date"
-                :disabled="disableDate"
-                :show-error="showErrors"
-                :error-message="errorMessages.date"
-                type="date"
-                label="Order Date"
-            />
-            <BaseSelect
-                v-model="client"
-                :options="clients"
-                :disabled="disabledClients"
-                :show-error="showErrors"
-                :error-message="errorMessages.client"
-                label="Client"
-            />
-            <BaseSelect
-                v-model="contact"
-                :options="contacts"
-                :disabled="disabledContacts"
-                :show-error="showErrors"
-                :error-message="errorMessages.contact"
-                label="Contact"
-            />
-        </template>
-        <template v-slot:buttons>
-            <BaseButton
-                @click="buttonClick()"
-                :is-disabled="loading"
-                :is-loading="savingData"
-                >{{ buttonName }}</BaseButton
-            >
-        </template>
-    </FormWrapper>
+        <WrapperFormSection>
+            <template v-slot:default>
+                <div :class="$style.inputs">
+                    <BaseInput
+                        v-model="date"
+                        :disabled="disableDate"
+                        :show-error="showErrors"
+                        :error-message="errorMessages.date"
+                        type="date"
+                        label="Order Date"
+                    />
+                    <BaseSelect
+                        v-model="client"
+                        :options="clients"
+                        :disabled="disabledClients"
+                        :show-error="showErrors"
+                        :error-message="errorMessages.client"
+                        label="Client"
+                    />
+                    <BaseSelect
+                        v-model="contact"
+                        :options="contacts"
+                        :disabled="disabledContacts"
+                        :show-error="showErrors"
+                        :error-message="errorMessages.contact"
+                        label="Contact"
+                    />
+                </div>
+            </template>
+            <template v-slot:buttons>
+                <BaseButton
+                    @click="buttonClick()"
+                    :is-disabled="loading"
+                    :is-loading="savingData"
+                    >{{ buttonName }}</BaseButton
+                >
+            </template>
+        </WrapperFormSection>
+    </WrapperForm>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, watch, Ref } from 'vue'
 import { useStore, Store } from 'vuex'
-import FormWrapper from './FormWrapper.vue'
+import WrapperForm from './WrapperForm.vue'
+import WrapperFormSection from './WrapperFormSection.vue'
 import BaseButton from './BaseButton.vue'
 import BaseInput from './BaseInput.vue'
 import BaseSelect from './BaseSelect.vue'
@@ -79,10 +84,8 @@ const getClientContactsDataObject = (store: Store<any>) => {
         store.getters['formOrderDetails/clientContacts'](client.value?.id),
     )
     const watchClient = () =>
-        watch(client, (newVal) =>
-            newVal?.id
-                ? getClientContactsData(Number(newVal?.id))
-                : null,
+        watch(client, newVal =>
+            newVal?.id ? getClientContactsData(Number(newVal?.id)) : null,
         )
     watchClient()
     return {
@@ -122,7 +125,8 @@ const getSaveDataObject = (store: Store<any>, showErrors: Ref<boolean>) => {
 export default defineComponent({
     name: 'FormOrderDetails',
     components: {
-        FormWrapper,
+        WrapperForm,
+        WrapperFormSection,
         BaseButton,
         BaseInput,
         BaseSelect,
@@ -201,4 +205,18 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style lang="scss" module>
+.inputs {
+    width: 100%;
+    > div {
+        margin-bottom: 20px;
+    }
+    @media (min-width: 500px) {
+        display: flex;
+        flex-wrap: wrap;
+        > div {
+            margin-right: 20px;
+        }
+    }
+}
+</style>

@@ -1,5 +1,4 @@
 import { createStore } from 'vuex'
-import * as serverStatus from './modules/serverStatus'
 import * as formOrderDetails from './modules/formOrderDetails'
 
 export default createStore({
@@ -8,7 +7,6 @@ export default createStore({
     actions: {},
     getters: {},
     modules: {
-        serverStatus,
         formOrderDetails,
     },
 })

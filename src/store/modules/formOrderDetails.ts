@@ -79,7 +79,7 @@ export const mutations = {
     },
     RESET(state: State) {
         state = initialState()
-    }
+    },
 }
 
 export const actions = {
@@ -104,25 +104,33 @@ export const actions = {
     },
     async saveOrderDetails({ state, getters, commit }: any) {
         const { orderId } = state as State
-        const { date: orderDate, client, contact, validDate, validClient, validContact } = getters
+        const {
+            date: orderDate,
+            client,
+            contact,
+            validDate,
+            validClient,
+            validContact,
+        } = getters
         console.log('PAYLOAD')
-        console.log({orderDate, client, contact})
+        console.log({ orderDate, client, contact })
         if (validDate && validClient && validContact) {
             const { success, id = null, message = '' } = orderId
-            ? await putOrderCall({ orderId, orderDate, client, contact })
-            : await postOrderCall({ orderDate, client, contact })
+                ? await putOrderCall({ orderId, orderDate, client, contact })
+                : await postOrderCall({ orderDate, client, contact })
             if (success) {
                 commit('SET_SAVED', true)
                 commit('SET_ORDER_ID', orderId)
                 console.log(`Order Details Saved. The new ID is: ${id}`)
             } else {
                 commit('SET_SAVED', false)
-                console.log(message || 'something went wrong saving orderDetails')
+                console.log(
+                    message || 'something went wrong saving orderDetails',
+                )
             }
         } else {
             console.log('some fields are not valid')
         }
-        
     },
 }
 
@@ -146,12 +154,13 @@ export const getters = {
     validContact: (state: State) => !isEmpty(state.contact),
     validDate: (state: State) => !!state.date,
 
-    isDataValid: (state: State, getters: any) => getters.validClient && getters.validContact && getters.validDate,
+    isDataValid: (state: State, getters: any) =>
+        getters.validClient && getters.validContact && getters.validDate,
 
     isDataSaved: (state: State) => state.saved,
     errorMessages: (state: State, getters: any) => ({
         client: getters.validClient ? '' : 'Client is not valid',
         contact: getters.validContact ? '' : 'Contact is not valid',
         date: getters.validDate ? '' : 'Date is not valid',
-    })
+    }),
 }

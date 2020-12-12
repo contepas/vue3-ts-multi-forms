@@ -2,11 +2,7 @@
     <div :class="containerStyle">
         <span><slot>Button</slot></span>
         <span v-if="isLoading" style="margin-left: 15px;">
-            <SvgLoading
-                width="16px"
-                height="16px"
-                color="white"
-            />
+            <SvgLoading width="16px" height="16px" color="white" />
         </span>
     </div>
 </template>
@@ -32,13 +28,10 @@ export default defineComponent({
         const containerStyle = computed(() => {
             const { disabled, container } = useCssModule()
             const { isDisabled, isLoading } = props
-            return [
-                container,
-                { [disabled]: isDisabled || isLoading}
-            ]
+            return [container, { [disabled]: isDisabled || isLoading }]
         })
         return {
-            containerStyle
+            containerStyle,
         }
     },
 })

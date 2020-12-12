@@ -1,15 +1,21 @@
 <template>
-	<div>
-        <BaseButton style="margin: 20px auto;" @click="serverUpDown">{{buttonName}}</BaseButton>
-		<FormOrderDetails />
-		<FormSellers />
-		<FormItems />
-	</div>
+    <div>
+        <BaseButton style="margin: 20px auto;" @click="serverUpDown">{{
+            buttonName
+        }}</BaseButton>
+        <FormOrderDetails />
+        <FormSellers />
+        <FormItems />
+    </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue'
-import { getIsServerUp, serverUp, serverDown } from '../compositionFunctions/store/serverStatus'
+import {
+    getIsServerUp,
+    serverUp,
+    serverDown,
+} from '../compositionFunctions/store/serverStatus'
 import FormOrderDetails from '../components/FormOrderDetails.vue'
 import FormSellers from '../components/FormSellers.vue'
 import FormItems from '../components/FormItems.vue'
@@ -21,7 +27,7 @@ export default defineComponent({
         FormOrderDetails,
         FormSellers,
         FormItems,
-        BaseButton
+        BaseButton,
     },
     setup() {
         const serverUpDown = () => {
@@ -31,14 +37,15 @@ export default defineComponent({
                 serverUp()
             }
         }
-        const buttonName = computed(() => getIsServerUp.value ? 'Server Down' : 'Server Up')
+        const buttonName = computed(() =>
+            getIsServerUp.value ? 'Server Down' : 'Server Up',
+        )
         return {
             serverUpDown,
-            buttonName
+            buttonName,
         }
     },
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

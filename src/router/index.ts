@@ -11,9 +11,7 @@ const routes: Array<RouteRecordRaw> = [
         path: '/forms',
         name: 'Forms',
         component: () =>
-            import(
-                /* webpackChunkName: "assignment" */ '../views/Forms.vue'
-            ),
+            import(/* webpackChunkName: "assignment" */ '../views/Forms.vue'),
     },
     {
         path: '/:pathMatch(.*)*',

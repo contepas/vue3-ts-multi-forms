@@ -141,7 +141,9 @@ const validateItem = (item: requestOrderItem): void => {
 }
 
 // POST /order/{orderId}/item
-export const postOrderItemCall = (item: requestOrderItem): Promise<response> => {
+export const postOrderItemCall = (
+    item: requestOrderItem,
+): Promise<response> => {
     const type = 'POST'
     validateItem(item)
     return fakeApiCall({ type, data: item })

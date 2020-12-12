@@ -20,7 +20,7 @@ export default defineComponent({
     props: {
         id: {
             type: String,
-            default: uniqueId('input_'),
+            default: () => uniqueId('input_'),
         },
         modelValue: {
             type: [String, Number],
