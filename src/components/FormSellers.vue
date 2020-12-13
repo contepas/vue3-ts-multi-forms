@@ -13,9 +13,9 @@
                         label="Seller"
                     />
                     <BaseInput
-                        v-model="seller.percentage"
+                        v-model.number="seller.percentage"
                         type="number"
-                        label="Price"
+                        label="Percentage"
                         step="0.01"
                         min="0"
                         max="100"
@@ -26,6 +26,12 @@
                         >Delete</BaseButton
                     >
                 </div>
+                <p
+                    style="color: red; margin: 5px 0 0 8px;"
+                    v-show="showError && errorMessage"
+                >
+                    {{ errorMessage }}
+                </p>
             </template>
             <template v-slot:buttons>
                 <BaseButton
@@ -40,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref, computed } from 'vue'
 import { uniqueId } from 'lodash'
 import WrapperForm from './WrapperForm.vue'
 import WrapperFormSection from './WrapperFormSection.vue'
@@ -50,11 +56,11 @@ import BaseSelect from './BaseSelect.vue'
 import {
     getAllSellersCall,
     allSellers,
-    sellerBind,
     addSeller,
     removeSeller,
     sellers,
     canAddSellerFields,
+    totalPercentageValid
 } from '../compositionFunctions/store/sellers'
 
 export default defineComponent({
@@ -68,13 +74,20 @@ export default defineComponent({
     },
     setup() {
         getAllSellersCall()
+        const errorMessage = computed(() => totalPercentageValid.value ? '' : 'Percentage sum has to be 100%')
+        const showError = ref(false)
+        const save = () => {
+            totalPercentageValid.value ? console.log('Submit form sellers') : showError.value = true
+        }
         return {
             addSeller,
             removeSeller,
             allSellers,
-            sellerBind,
             sellers,
             canAddSellerFields,
+            save,
+            showError,
+            errorMessage,
         }
     },
 })

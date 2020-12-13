@@ -1,4 +1,4 @@
-import { ref, computed, reactive, Ref } from 'vue'
+import { ref, computed, reactive, Ref, watch } from 'vue'
 import { getSellersCall } from '../../services/restApis'
 import { saveError } from './errorLog'
 import { uniqueId } from 'lodash'
@@ -44,6 +44,7 @@ const state:State = reactive({
         }
     },
 })
+// watch(state.sellers, (newValue) => console.log(newValue))
 
 
 // ========
@@ -52,6 +53,13 @@ const state:State = reactive({
 export const allSellers = computed(() => state.allSellers)
 export const sellers = computed(() => state.sellers)
 export const canAddSellerFields = computed(() => state.allSellers.length > Object.keys(state.sellers).length)
+export const totalPercentageValid = computed(() => {
+    const percentage = Object.values(state.sellers).reduce((acc, seller) => {
+        return acc + Number(seller.percentage)
+    }, 0)
+    return percentage === 100
+})
+// watch(totalPercentageValid, (newValue) => console.log(newValue))
 
 
 // =========
@@ -98,19 +106,4 @@ export const getAllSellersCall = async () => {
 }
 export const saveSellers = () => {
     console.log('ciao')
-}
-
-
-// ========
-// BINDINGS
-// ========
-export const sellerBind = (id: number | string) => {
-    if (state.sellers?.[id]) {
-        return computed({
-            get: ():any => state.sellers[id].seller,
-            set: (seller:NameId) => setSeller(seller)
-        })
-    } else {
-        throw 'sellerBind failed'
-    }
 }
