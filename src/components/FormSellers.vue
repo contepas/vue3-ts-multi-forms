@@ -3,27 +3,36 @@
         <WrapperFormSection>
             <template v-slot:default>
                 <div
-                    v-for="inputField in inputFields"
-                    :key="inputField.id"
+                    v-for="(seller, index) in sellers"
+                    :key="seller.id"
                     :class="$style.inputs"
                 >
                     <BaseSelect
-                        v-model="inputField.seller"
-                        :options="options"
+                        v-model="seller.seller"
+                        :options="allSellers"
                         label="Seller"
                     />
                     <BaseInput
-                        v-model="inputField.percentage"
+                        v-model="seller.percentage"
                         type="number"
                         label="Price"
                         step="0.01"
                         min="0"
                         max="100"
                     />
+                    <BaseButton
+                        v-if="index !== 'seller_1'"
+                        @click="removeSeller(index)"
+                        >Delete</BaseButton
+                    >
                 </div>
             </template>
             <template v-slot:buttons>
-                <BaseButton @click="addSeller()">+ Seller</BaseButton>
+                <BaseButton
+                    @click="addSeller()"
+                    :is-disabled="!canAddSellerFields"
+                    >+ Seller</BaseButton
+                >
                 <BaseButton @click="save()">Save</BaseButton>
             </template>
         </WrapperFormSection>
@@ -31,13 +40,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue'
+import { defineComponent } from 'vue'
 import { uniqueId } from 'lodash'
 import WrapperForm from './WrapperForm.vue'
 import WrapperFormSection from './WrapperFormSection.vue'
 import BaseButton from './BaseButton.vue'
 import BaseInput from './BaseInput.vue'
 import BaseSelect from './BaseSelect.vue'
+import {
+    getAllSellersCall,
+    allSellers,
+    sellerBind,
+    addSeller,
+    removeSeller,
+    sellers,
+    canAddSellerFields,
+} from '../compositionFunctions/store/sellers'
 
 export default defineComponent({
     name: 'FormSellers',
@@ -48,36 +66,15 @@ export default defineComponent({
         BaseInput,
         BaseSelect,
     },
-    props: {
-        msg: String,
-    },
     setup() {
-        const price = ref(0)
-        const options = [
-            {
-                name: 'Test 1',
-                id: 'test-1',
-            },
-            {
-                name: 'Test 2',
-                id: 'test-2',
-            },
-        ]
-        const value = ref()
-        const inputField = () => ({
-            id: `form-sellers-field-${uniqueId()}`,
-            seller: null,
-            percentage: 0,
-        })
-        const inputFields = ref([inputField()])
-        const addSeller = () => inputFields.value.push(inputField())
-
+        getAllSellersCall()
         return {
-            inputFields,
             addSeller,
-            options,
-            value,
-            price,
+            removeSeller,
+            allSellers,
+            sellerBind,
+            sellers,
+            canAddSellerFields,
         }
     },
 })
@@ -92,6 +89,7 @@ export default defineComponent({
     @media (min-width: 500px) {
         display: flex;
         flex-wrap: wrap;
+        align-items: flex-end;
         > div {
             margin-right: 20px;
         }
