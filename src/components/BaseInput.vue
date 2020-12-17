@@ -1,7 +1,13 @@
 <template>
     <div class="input-item">
         <label v-if="label" :for="id">{{ label }}</label>
-        <input v-bind="attrs" @input="emitValue" :value="modelValue" />
+        <input
+            v-bind="attrs"
+            :value="modelValue"
+            @input="emitValue($event)"
+            @keypress="checkOnlyPositiveNumbers($event)"
+            @paste="checkOnlyPositiveNumbers($event)"
+        />
         <p
             style="color: red; margin: 5px 0 0 8px;"
             v-show="showError && errorMessage"
@@ -44,10 +50,21 @@ export default defineComponent({
             type: String,
             default: '',
         },
+        onlyPositive: {
+            type: Boolean,
+            default: false,
+        },
     },
     methods: {
+        checkOnlyPositiveNumbers(event: any) {
+            const paste = event.type === 'paste' ? event.clipboardData.getData('text') : null
+            if (this.type === 'number' && (event.charCode === 45 || (!!paste && paste.toString().includes('-')))) {
+                event.preventDefault()
+            }
+        },
         emitValue(event: any) {
-            this.$emit('update:modelValue', event.target.value)
+            const value = event.target.value
+            this.$emit('update:modelValue', value)
         },
     },
     computed: {

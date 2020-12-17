@@ -2,7 +2,7 @@
     <WrapperForm
         title="Order Details"
         :loading="loading"
-        @click="getClientsData()"
+        @click="reloadClients()"
     >
         <WrapperFormSection>
             <template v-slot:default>
@@ -174,6 +174,7 @@ export default defineComponent({
             client,
             contact,
             clients: clients.result,
+            reloadClients: clients.callback,
             contacts: clients.result,
             buttonClick,
             showErrors,
