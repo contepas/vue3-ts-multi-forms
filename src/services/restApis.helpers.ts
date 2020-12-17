@@ -1,4 +1,4 @@
-import { getIsServerUp } from '../compositionFunctions/store/serverStatus'
+import { getIsServerUp } from '../composables/store/serverStatus'
 import {
     deleteRequest,
     getRequest,

@@ -15,7 +15,7 @@ import {
     getIsServerUp,
     serverUp,
     serverDown,
-} from '../compositionFunctions/store/serverStatus'
+} from '../composables/store/serverStatus'
 import FormOrderDetails from '../components/FormOrderDetails.vue'
 import FormSellers from '../components/FormSellers.vue'
 import FormItems from '../components/FormItems.vue'

@@ -61,7 +61,7 @@ import {
     sellers,
     canAddSellerFields,
     totalPercentageValid
-} from '../compositionFunctions/store/sellers'
+} from '../composables/store/sellers'
 
 export default defineComponent({
     name: 'FormSellers',
