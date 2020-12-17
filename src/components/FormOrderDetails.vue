@@ -61,9 +61,9 @@ import { date, client, contact } from '../composables/store/orderDetailsData'
 const getClientsData = (store: Store<any>) => {
     const getClients = () => store.dispatch('formOrderDetails/getClients')
     const { loading, callback, error } = asyncCall(getClients)
-    const value = computed(() => store.getters['formOrderDetails/clients'])
+    const result = computed(() => store.getters['formOrderDetails/clients'])
     return {
-        value,
+        result,
         loading,
         error,
         callback,
@@ -74,7 +74,7 @@ const getClientContactsData = (store: Store<any>) => {
     const getClientContacts = (id: number) =>
         store.dispatch('formOrderDetails/getClientContacts', id)
     const { loading, error, callback } = asyncCall(getClientContacts)
-    const value = computed(() =>
+    const result = computed(() =>
         store.getters['formOrderDetails/clientContacts'](client.value?.id),
     )
     const watchClient = () =>
@@ -83,7 +83,7 @@ const getClientContactsData = (store: Store<any>) => {
         )
     watchClient()
     return {
-        value,
+        result,
         loading,
         error,
         callback,
@@ -164,7 +164,7 @@ export default defineComponent({
             date: disableInputs.value,
             contacts:
                 loading.value ||
-                contacts.value.value.length < 1 ||
+                contacts.result.value.length < 1 ||
                 disableInputs.value,
             clients: loading.value || disableInputs.value,
         }))
@@ -173,8 +173,8 @@ export default defineComponent({
             date,
             client,
             contact,
-            clients: clients.value,
-            contacts: clients.value,
+            clients: clients.result,
+            contacts: clients.result,
             buttonClick,
             showErrors,
             errorMessages,
