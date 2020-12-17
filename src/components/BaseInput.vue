@@ -5,8 +5,8 @@
             v-bind="attrs"
             :value="modelValue"
             @input="emitValue($event)"
-            @keypress="checkOnlyPositiveNumbers($event)"
-            @paste="checkOnlyPositiveNumbers($event)"
+            @keypress="emitOnlyPositive($event)"
+            @paste="emitOnlyPositive($event)"
         />
         <p
             style="color: red; margin: 5px 0 0 8px;"
@@ -52,14 +52,19 @@ export default defineComponent({
         },
         onlyPositive: {
             type: Boolean,
-            default: false,
+            default: true,
         },
     },
     methods: {
-        checkOnlyPositiveNumbers(event: any) {
-            const paste = event.type === 'paste' ? event.clipboardData.getData('text') : null
-            if (this.type === 'number' && (event.charCode === 45 || (!!paste && paste.toString().includes('-')))) {
-                event.preventDefault()
+        emitOnlyPositive(event: any) {
+            const { type, onlyPositive } = this
+            if (type === 'number' && onlyPositive) {
+                const paste =
+                    event.type === 'paste'
+                        ? event.clipboardData.getData('text')
+                        : null
+                if (event.charCode === 45 || (!!paste && Number(paste) < 0))
+                    event.preventDefault()
             }
         },
         emitValue(event: any) {

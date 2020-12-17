@@ -38,7 +38,7 @@ interface State {
 const state:State = reactive({
     allSellers: [],
     sellers: {
-        'seller_1': {
+        seller1: {
             seller: null,
             percentage: 0,
         }
